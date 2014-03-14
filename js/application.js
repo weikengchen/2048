@@ -41,3 +41,10 @@ function swirl(dir) {
     swirl((dir + 1) % 4);
   }, 100);
 }
+
+function random() {
+  game.move(Math.floor(Math.random() * 4));
+  setTimeout(function() {
+    random();
+  }, 100);
+}
