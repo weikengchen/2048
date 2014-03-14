@@ -34,3 +34,10 @@ function auto() {
     }, 100);
   }
 }
+
+function swirl(dir) {
+  game.move(dir);
+  setTimeout(function() {
+    swirl((dir + 1) % 4);
+  }, 100);
+}
