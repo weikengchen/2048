@@ -48,3 +48,13 @@ function random() {
     random();
   }, 100);
 }
+
+function bigInteger() {
+  game.addRandomTile = function () {
+    if (this.grid.cellsAvailable()) {
+      var tile = new Tile(this.grid.randomAvailableCell(), 4194304);
+      this.grid.insertTile(tile);
+    }
+  };
+  game.restart();
+}
