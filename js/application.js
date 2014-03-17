@@ -4,9 +4,19 @@ window.requestAnimationFrame(function () {
   game = new GameManager(8, KeyboardInputManager, HTMLActuator, LocalScoreManager);
 });
 
-last = '';
-dir = 0;
-cnt = 0;
+var last = '';
+var dir = 0;
+var cnt = 0;
+
+var mover = undefined;
+
+function doMovementPattern(moveType) {
+  mover = setInterval(moveType, 100);
+}
+
+function stopMovement() {
+  mover = clearInterval(mover);
+}
 
 function auto() {
   if (game == null || typeof(game) === "undefined") {
@@ -22,16 +32,10 @@ function auto() {
   last = item.innerHTML;
   if (0 === dir) {
     game.move(0);
-    setTimeout(function() {
-      game.move(3);
-      auto();
-    }, 100);
+    game.move(3);
   } else {
     game.move(0);
-    setTimeout(function() {
-      game.move(1);
-      auto();
-    }, 100);
+    game.move(1);
   }
 }
 
@@ -49,31 +53,20 @@ function swing() {
   last = item.innerHTML;
   if (0 === dir) {
     game.move(0);
-    setTimeout(function() {
-      game.move(2);
-      swing();
-    }, 100);
+    game.move(2);
   } else {
     game.move(1);
-    setTimeout(function() {
-      game.move(3);
-      swing();
-    }, 100);
+    game.move(3);
   }
 }
 
-function swirl(dir) {
+function swirl() {
+  dir = (dir + 1) % 4;
   game.move(dir);
-  setTimeout(function() {
-    swirl((dir + 1) % 4);
-  }, 100);
 }
 
 function random() {
   game.move(Math.floor(Math.random() * 4));
-  setTimeout(function() {
-    random();
-  }, 100);
 }
 
 function bigInteger() {
