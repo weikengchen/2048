@@ -11,7 +11,7 @@ var cnt = 0;
 var mover = undefined;
 
 function doMovementPattern(moveType) {
-  mover = setInterval(moveType, 100);
+  mover = setInterval(moveType, 25);
 }
 
 function stopMovement() {
