@@ -18,11 +18,11 @@
     <div class="heading">
       <h1 class="title">2147483648</h1>
       <div class="scores-container">
-        <div class="score-container">0</div>
+        <div class="score-container" id="score-container">0</div>
         <div class="best-container">0</div>
       </div>
     </div>
-    <p class="game-intro">Join the numbers and get to the <strong>2147483648 tile!</strong></p>
+    <p class="game-intro" id="game-intro">Join the numbers and get to the <strong>2147483648 tile!</strong></p>
 
     <div class="game-container">
       <div class="game-message">
@@ -39,20 +39,26 @@
 
       </div>
     </div>
-    
+    <hr>
+    <p>
+      Time rush: <br/>
+      <button name="automove" type="button" onclick="timeRush(60);">60s Time Rush</button>
+      <button name="automove" type="button" onclick="timeRush(300);">300s Time Rush</button>
+    </p>
     <hr>
     <p>
       My Github: <a href="https://github.com/CyberZHG/">CyberZHG</a> <br/>
       Contributor: <a href="https://github.com/jiangtyd/">jiangtyd</a>
     </p>
+    <hr/>
     <p>
       Auto move: <br/>
-      <button type="button" onclick="doMovementPattern(corner);">Corner</button>
-      <button type="button" onclick="doMovementPattern(swing);">Swing</button>
-      <button type="button" onclick="doMovementPattern(swirl);">Swirl</button>
-      <button type="button" onclick="doMovementPattern(random);">Random</button>
+      <button name="automove" type="button" onclick="doMovementPattern(corner);">Corner</button>
+      <button name="automove" type="button" onclick="doMovementPattern(swing);">Swing</button>
+      <button name="automove" type="button" onclick="doMovementPattern(swirl);">Swirl</button>
+      <button name="automove" type="button" onclick="doMovementPattern(random);">Random</button>
       <br/>
-      <button type="button" onclick="stopMovement();">Stop moving</button>
+      <button type="button" onclick="stopMovement();">Stop</button>
     </p>
     <hr>
     <p>

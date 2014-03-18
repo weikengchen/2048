@@ -37,7 +37,10 @@ function doMovementPattern(moveType) {
 }
 
 function stopMovement() {
-  mover = clearInterval(mover);
+  if (typeof(mover) != 'undefined') {
+    clearInterval(mover);
+    mover = undefined;
+  }
 }
 
 function corner() {
@@ -428,4 +431,36 @@ function powerTwo() {
   game.inputManager.events["move"] = [];
   game.inputManager.on("move", game.move.bind(game));
   game.restart();
+}
+
+function timeRush(sec) {
+  stopMovement();
+  var autos = document.getElementsByName('automove');
+  for (var i in autos) {
+    autos[i].disabled = 'disabled';
+  }
+  game.restart();
+  var cnt = sec;
+  function countDown() {
+    if (game.over) {
+      cnt = 0;
+    }
+    var item = document.getElementById('game-intro');
+    item.innerText = "Remaining Time: " + cnt;
+    if (cnt == 0) {
+      game.over = true;
+      game.actuate();
+      item.innerText = sec + "s time rush result: " + game.score;
+      var autos = document.getElementsByName('automove');
+      for (var i in autos) {
+        autos[i].disabled = '';
+      }
+    } else {
+      setTimeout(function() {
+        --cnt;
+        countDown();
+      }, 1000);
+    }
+  }
+  countDown();
 }
