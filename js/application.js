@@ -178,3 +178,82 @@ function fibonacci() {
   game.inputManager.on("move", game.move.bind(game));
   game.restart();
 }
+
+function threes() {
+  game.addRandomTile = function () {
+    if (this.grid.cellsAvailable()) {
+      var value = Math.random() < 0.7 ? (Math.random() < 0.5 ? 1 : 2) : 3;
+      var tile = new Tile(this.grid.randomAvailableCell(), value);
+      this.grid.insertTile(tile);
+    }
+  };
+  game.tileMatchesAvailable = function () {
+    var self = this;
+    var tile;
+    for (var x = 0; x < this.size; x++) {
+      for (var y = 0; y < this.size; y++) {
+        tile = this.grid.cellContent({ x: x, y: y });
+        if (tile) {
+          for (var direction = 0; direction < 4; direction++) {
+            var vector = self.getVector(direction);
+            var cell   = { x: x + vector.x, y: y + vector.y };
+            var other  = self.grid.cellContent(cell);
+            if (other) {
+              if (((tile.value === 1 && other.value === 2) || 
+                   (tile.value === 2 && other.value === 1) || 
+                   (tile.value > 2 && other.value > 2 && tile.value === other.value))) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  };
+  game.move = function (direction) {
+    var self = this;
+    if (this.over || this.won) return;
+    var cell, tile;
+    var vector     = this.getVector(direction);
+    var traversals = this.buildTraversals(vector);
+    var moved      = false;
+    this.prepareTiles();
+    traversals.x.forEach(function (x) {
+      traversals.y.forEach(function (y) {
+        cell = { x: x, y: y };
+        tile = self.grid.cellContent(cell);
+        if (tile) {
+          var positions = self.findFarthestPosition(cell, vector);
+          var next      = self.grid.cellContent(positions.next);
+          if (next && !next.mergedFrom && ((tile.value === 1 && next.value === 2) || 
+                                           (tile.value === 2 && next.value === 1) || 
+                                           (tile.value > 2 && next.value > 2 && tile.value === next.value))) {
+            var merged = new Tile(positions.next, tile.value + next.value);
+            merged.mergedFrom = [tile, next];
+            self.grid.insertTile(merged);
+            self.grid.removeTile(tile);
+            tile.updatePosition(positions.next);
+            self.score += merged.value;
+            if (merged.value === 1610612736) self.won = true;
+          } else {
+            self.moveTile(tile, positions.farthest);
+          }
+          if (!self.positionsEqual(cell, tile)) {
+            moved = true; 
+          }
+        }
+      });
+    });
+    if (moved) {
+      this.addRandomTile();
+      if (!this.movesAvailable()) {
+        this.over = true; 
+      }
+      this.actuate();
+    }
+  };
+  game.inputManager.events["move"] = [];
+  game.inputManager.on("move", game.move.bind(game));
+  game.restart();
+}
