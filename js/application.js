@@ -18,7 +18,7 @@ function stopMovement() {
   mover = clearInterval(mover);
 }
 
-function auto() {
+function corner() {
   if (game == null || typeof(game) === "undefined") {
     return;
   }
