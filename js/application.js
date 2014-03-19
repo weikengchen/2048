@@ -464,3 +464,14 @@ function timeRush(sec) {
   }
   countDown();
 }
+
+function tileZero() {
+  game.addRandomTile = function () {
+    if (this.grid.cellsAvailable()) {
+      var value = Math.random() < 0.7 ? (Math.random() < 0.5 ? 1 : 2) : 0;
+      var tile = new Tile(this.grid.randomAvailableCell(), value);
+      this.grid.insertTile(tile);
+    }
+  };
+  game.restart();
+}
