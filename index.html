@@ -5,7 +5,6 @@
   <title>2147483648</title>
 
   <link href="style/main.css" rel="stylesheet" type="text/css">
-  <link href="style/skin.css" rel="stylesheet" type="text/css">
   <link rel="shortcut icon" href="favicon.ico">
   <link rel="apple-touch-icon" href="meta/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -48,7 +47,7 @@
     </p>
     <hr>
     <p>
-      My Github: <a href="https://github.com/CyberZHG/">CyberZHG</a> <br/>
+      My Github: <a href="https://github.com/CyberZHG/">CyberZHG</a> <br>
       Contributor: <a href="https://github.com/jiangtyd/">jiangtyd</a>
     </p>
     <hr/>
@@ -86,7 +85,8 @@
     </p>
     <hr>
       Skin: <br>
-      <button type="button" onclick="skin_bkb();">兵庫北</button>
+      <button type="button" onclick="window.location.href='skin_bkb.html';">兵庫北</button>
+      <button type="button" onclick="window.location.href='skin_chemistry.html';">Chemistry</button>
     <hr>
     <p class="game-explanation">
       <strong class="important">How to play:</strong> Use your <strong>arrow keys</strong> to move the tiles. When two tiles with the same number touch, they <strong>merge into one!</strong>
@@ -101,7 +101,6 @@
     </p>
     <hr>
   </div>
-
   <script src="js/animframe_polyfill.js"></script>
   <script src="js/keyboard_input_manager.js"></script>
   <script src="js/html_actuator.js"></script>
@@ -110,16 +109,13 @@
   <script src="js/local_score_manager.js"></script>
   <script src="js/game_manager.js"></script>
   <script src="js/application.js"></script>
-  <script src="js/skin.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
     ga('create', 'UA-49094472-1', 'cyberzhg.github.io');
     ga('send', 'pageview');
-
   </script>
 </body>
 </html>
