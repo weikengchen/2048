@@ -21,6 +21,7 @@ window.requestAnimationFrame(function () {
   }
   container.innerHTML = html;
   game = new GameManager(size, KeyboardInputManager, HTMLActuator, LocalScoreManager);
+  normal();
 });
 
 var last = '';
@@ -94,14 +95,98 @@ function random() {
   game.move(Math.floor(Math.random() * 4));
 }
 
-function alwaysTwo() {
+function changeRule(add, merge, win) {
   game.addRandomTile = function () {
     if (this.grid.cellsAvailable()) {
-      var tile = new Tile(this.grid.randomAvailableCell(), 2);
+      var tile = new Tile(this.grid.randomAvailableCell(), add());
       this.grid.insertTile(tile);
     }
   };
+  game.tileMatchesAvailable = function () {
+    var self = this;
+    var tile;
+    for (var x = 0; x < this.size; x++) {
+      for (var y = 0; y < this.size; y++) {
+        tile = this.grid.cellContent({ x: x, y: y });
+        if (tile) {
+          for (var direction = 0; direction < 4; direction++) {
+            var vector = self.getVector(direction);
+            var cell   = { x: x + vector.x, y: y + vector.y };
+            var other  = self.grid.cellContent(cell);
+            if (other && merge(other.value, tile.value)) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  };
+  game.move = function (direction) {
+    var self = this;
+    if (this.over || this.won) return;
+    var cell, tile;
+    var vector     = this.getVector(direction);
+    var traversals = this.buildTraversals(vector);
+    var moved      = false;
+    this.prepareTiles();
+    traversals.x.forEach(function (x) {
+      traversals.y.forEach(function (y) {
+        cell = { x: x, y: y };
+        tile = self.grid.cellContent(cell);
+        if (tile) {
+          var positions = self.findFarthestPosition(cell, vector);
+          var next      = self.grid.cellContent(positions.next);
+          if (next && !next.mergedFrom && merge(next.value, tile.value)) {
+            var merged = new Tile(positions.next, tile.value + next.value);
+            merged.mergedFrom = [tile, next];
+            self.grid.insertTile(merged);
+            self.grid.removeTile(tile);
+            tile.updatePosition(positions.next);
+            self.score += merged.value;
+            if (win(merge.value)) self.won = true;
+          } else {
+            self.moveTile(tile, positions.farthest);
+          }
+          if (!self.positionsEqual(cell, tile)) {
+            moved = true; 
+          }
+        }
+      });
+    });
+    if (moved) {
+      this.addRandomTile();
+      if (!this.movesAvailable()) {
+        this.over = true; 
+      }
+      this.actuate();
+    }
+  };
+  game.inputManager.events["move"] = [];
+  game.inputManager.on("move", game.move.bind(game));
   game.restart();
+}
+
+function normalAdd() {
+  return Math.random() < 0.9 ? 2 : 4;
+}
+
+function normalMerge(a, b) {
+  return a === b;
+}
+
+function normalWin(merged) {
+  return merged === 4096;
+}
+
+function normal() {
+  changeRule(normalAdd, 
+    function(a, b) { return a === b; }, 
+    function(merged) { return merged === 2147483648; });
+}
+
+function alwaysTwo() {
+  changeRule(function() { return 2; }, normalMerge, normalWin);
 }
 
 function fibonacci() {
@@ -114,323 +199,51 @@ function fibonacci() {
     fib.push(c);
     a = b;
     b = c;
-  }  
-  game.addRandomTile = function () {
-    if (this.grid.cellsAvailable()) {
-      var tile = new Tile(this.grid.randomAvailableCell(), 1);
-      this.grid.insertTile(tile);
-    }
-  };
-  game.tileMatchesAvailable = function () {
-    var self = this;
-    var tile;
-    for (var x = 0; x < this.size; x++) {
-      for (var y = 0; y < this.size; y++) {
-        tile = this.grid.cellContent({ x: x, y: y });
-        if (tile) {
-          for (var direction = 0; direction < 4; direction++) {
-            var vector = self.getVector(direction);
-            var cell   = { x: x + vector.x, y: y + vector.y };
-            var other  = self.grid.cellContent(cell);
-            if (other) {
-              var sum = other.value + tile.value;
-              for (var i = 0; i < fib.length; ++i) {
-                if (sum === fib[i]) {
-                  return true;
-                }
-              }
-            }
-          }
+  }
+  changeRule(function() { return 1; },
+    function(a, b) {
+      for (var i = 0; i < fib.length; ++i) {
+        if (a + b === fib[i]) {
+          return true;
         }
       }
-    }
-    return false;
-  };
-  game.move = function (direction) {
-    var self = this;
-    if (this.over || this.won) return;
-    var cell, tile;
-    var vector     = this.getVector(direction);
-    var traversals = this.buildTraversals(vector);
-    var moved      = false;
-    this.prepareTiles();
-    traversals.x.forEach(function (x) {
-      traversals.y.forEach(function (y) {
-        cell = { x: x, y: y };
-        tile = self.grid.cellContent(cell);
-        if (tile) {
-          var positions = self.findFarthestPosition(cell, vector);
-          var next      = self.grid.cellContent(positions.next);
-          if (next && !next.mergedFrom) {
-            var isMerged = false;
-            for (var i = 0; i < fib.length; ++i) {
-              if (tile.value + next.value === fib[i]) {
-                var merged = new Tile(positions.next, tile.value + next.value);
-                merged.mergedFrom = [tile, next];
-                self.grid.insertTile(merged);
-                self.grid.removeTile(tile);
-                tile.updatePosition(positions.next);
-                self.score += merged.value;
-                if (merged.value === 5702887) self.won = true;
-                isMerged = true;
-                break;
-              }
-            }
-            if (!isMerged) {
-              self.moveTile(tile, positions.farthest);
-            }
-          } else {
-            self.moveTile(tile, positions.farthest);
-          }
-          if (!self.positionsEqual(cell, tile)) {
-            moved = true; 
-          }
-        }
-      });
-    });
-    if (moved) {
-      this.addRandomTile();
-      if (!this.movesAvailable()) {
-        this.over = true; 
-      }
-      this.actuate();
-    }
-  };
-  game.inputManager.events["move"] = [];
-  game.inputManager.on("move", game.move.bind(game));
-  game.restart();
+      return false;
+    }, 
+    function(merged) { return merged === 5702887; });
 }
 
 function threes() {
-  game.addRandomTile = function () {
-    if (this.grid.cellsAvailable()) {
-      var value = Math.random() < 0.7 ? (Math.random() < 0.5 ? 1 : 2) : 3;
-      var tile = new Tile(this.grid.randomAvailableCell(), value);
-      this.grid.insertTile(tile);
-    }
-  };
-  game.tileMatchesAvailable = function () {
-    var self = this;
-    var tile;
-    for (var x = 0; x < this.size; x++) {
-      for (var y = 0; y < this.size; y++) {
-        tile = this.grid.cellContent({ x: x, y: y });
-        if (tile) {
-          for (var direction = 0; direction < 4; direction++) {
-            var vector = self.getVector(direction);
-            var cell   = { x: x + vector.x, y: y + vector.y };
-            var other  = self.grid.cellContent(cell);
-            if (other) {
-              if (((tile.value === 1 && other.value === 2) || 
-                   (tile.value === 2 && other.value === 1) || 
-                   (tile.value > 2 && other.value > 2 && tile.value === other.value))) {
-                return true;
-              }
-            }
-          }
-        }
-      }
-    }
-    return false;
-  };
-  game.move = function (direction) {
-    var self = this;
-    if (this.over || this.won) return;
-    var cell, tile;
-    var vector     = this.getVector(direction);
-    var traversals = this.buildTraversals(vector);
-    var moved      = false;
-    this.prepareTiles();
-    traversals.x.forEach(function (x) {
-      traversals.y.forEach(function (y) {
-        cell = { x: x, y: y };
-        tile = self.grid.cellContent(cell);
-        if (tile) {
-          var positions = self.findFarthestPosition(cell, vector);
-          var next      = self.grid.cellContent(positions.next);
-          if (next && !next.mergedFrom && ((tile.value === 1 && next.value === 2) || 
-                                           (tile.value === 2 && next.value === 1) || 
-                                           (tile.value > 2 && next.value > 2 && tile.value === next.value))) {
-            var merged = new Tile(positions.next, tile.value + next.value);
-            merged.mergedFrom = [tile, next];
-            self.grid.insertTile(merged);
-            self.grid.removeTile(tile);
-            tile.updatePosition(positions.next);
-            self.score += merged.value;
-            if (merged.value === 1610612736) self.won = true;
-          } else {
-            self.moveTile(tile, positions.farthest);
-          }
-          if (!self.positionsEqual(cell, tile)) {
-            moved = true; 
-          }
-        }
-      });
-    });
-    if (moved) {
-      this.addRandomTile();
-      if (!this.movesAvailable()) {
-        this.over = true; 
-      }
-      this.actuate();
-    }
-  };
-  game.inputManager.events["move"] = [];
-  game.inputManager.on("move", game.move.bind(game));
-  game.restart();
+  changeRule(function() { return Math.random() < 0.7 ? (Math.random() < 0.5 ? 1 : 2) : 3; },
+    function(a, b) { return (a === 1 && b === 2) || (a === 2 && b === 1) || (a > 2 && b > 2 && a === b); }, 
+    function(merged) { return merged === 1610612736; });
 }
 
 function mergeAny() {
-  game.addRandomTile = function () {
-    if (this.grid.cellsAvailable()) {
-      var value = Math.random() < 0.5 ? 1 : 2;
-      var tile = new Tile(this.grid.randomAvailableCell(), value);
-      this.grid.insertTile(tile);
-    }
-  };
-  game.tileMatchesAvailable = function () {
-    var self = this;
-    var tile;
-    for (var x = 0; x < this.size; x++) {
-      for (var y = 0; y < this.size; y++) {
-        tile = this.grid.cellContent({ x: x, y: y });
-        if (tile) {
-          for (var direction = 0; direction < 4; direction++) {
-            var vector = self.getVector(direction);
-            var cell   = { x: x + vector.x, y: y + vector.y };
-            var other  = self.grid.cellContent(cell);
-            if (other) {
-              return true;
-            }
-          }
-        }
-      }
-    }
-    return false;
-  };
-  game.move = function (direction) {
-    var self = this;
-    if (this.over || this.won) return;
-    var cell, tile;
-    var vector     = this.getVector(direction);
-    var traversals = this.buildTraversals(vector);
-    var moved      = false;
-    this.prepareTiles();
-    traversals.x.forEach(function (x) {
-      traversals.y.forEach(function (y) {
-        cell = { x: x, y: y };
-        tile = self.grid.cellContent(cell);
-        if (tile) {
-          var positions = self.findFarthestPosition(cell, vector);
-          var next      = self.grid.cellContent(positions.next);
-          if (next && !next.mergedFrom) {
-            var merged = new Tile(positions.next, tile.value + next.value);
-            merged.mergedFrom = [tile, next];
-            self.grid.insertTile(merged);
-            self.grid.removeTile(tile);
-            tile.updatePosition(positions.next);
-            self.score += merged.value;
-          } else {
-            self.moveTile(tile, positions.farthest);
-          }
-          if (!self.positionsEqual(cell, tile)) {
-            moved = true; 
-          }
-        }
-      });
-    });
-    if (moved) {
-      this.addRandomTile();
-      if (!this.movesAvailable()) {
-        this.over = true; 
-      }
-      this.actuate();
-    }
-  };
-  game.inputManager.events["move"] = [];
-  game.inputManager.on("move", game.move.bind(game));
-  game.restart();
+  changeRule(function() { return Math.random() < 0.5 ? 1 : 2; },
+    function(a, b) { return true; }, 
+    function(merged) { return false; });
 }
 
 function powerTwo() {
   var index = 0;
-  game.addRandomTile = function () {
-    if (this.grid.cellsAvailable()) {
-      var value = index === 0 ? 1 : index;
-      if (index == 0) {
-        index = 1;
-      } else {
-        index <<= 1;
-        if (index > 65536) {
-          index = 0;
-        }
-      }
-      var tile = new Tile(this.grid.randomAvailableCell(), value);
-      this.grid.insertTile(tile);
-    }
-  };
-  game.tileMatchesAvailable = function () {
-    var self = this;
-    var tile;
-    for (var x = 0; x < this.size; x++) {
-      for (var y = 0; y < this.size; y++) {
-        tile = this.grid.cellContent({ x: x, y: y });
-        if (tile) {
-          for (var direction = 0; direction < 4; direction++) {
-            var vector = self.getVector(direction);
-            var cell   = { x: x + vector.x, y: y + vector.y };
-            var other  = self.grid.cellContent(cell);
-            if (other && tile.value === other.value) {
-              return true;
-            }
-          }
-        }
+  changeRule(function() {
+    var value = index === 0 ? 1 : index;
+    if (index == 0) {
+      index = 1;
+    } else {
+      index <<= 1;
+      if (index > 65536) {
+        index = 0;
       }
     }
-    return false;
-  };
-  game.move = function (direction) {
-    var self = this;
-    if (this.over || this.won) return;
-    var cell, tile;
-    var vector     = this.getVector(direction);
-    var traversals = this.buildTraversals(vector);
-    var moved      = false;
-    this.prepareTiles();
-    traversals.x.forEach(function (x) {
-      traversals.y.forEach(function (y) {
-        cell = { x: x, y: y };
-        tile = self.grid.cellContent(cell);
-        if (tile) {
-          var positions = self.findFarthestPosition(cell, vector);
-          var next      = self.grid.cellContent(positions.next);
-          if (next && !next.mergedFrom && tile.value === next.value) {
-            var merged = new Tile(positions.next, tile.value + next.value);
-            merged.mergedFrom = [tile, next];
-            self.grid.insertTile(merged);
-            self.grid.removeTile(tile);
-            tile.updatePosition(positions.next);
-            self.score += merged.value;
-          } else {
-            self.moveTile(tile, positions.farthest);
-          }
-          if (!self.positionsEqual(cell, tile)) {
-            moved = true; 
-          }
-        }
-      });
-    });
-    if (moved) {
-      this.addRandomTile();
-      if (!this.movesAvailable()) {
-        this.over = true; 
-      }
-      this.actuate();
-    }
-  };
-  game.inputManager.events["move"] = [];
-  game.inputManager.on("move", game.move.bind(game));
-  game.restart();
+    return value;
+  }, normalMerge, normalWin);
+}
+
+function tileZero() {
+  changeRule(function() {
+    return Math.random() < 0.7 ? (Math.random() < 0.5 ? 1 : 2) : 0;
+  }, normalMerge, normalWin);
 }
 
 function timeRush(sec) {
@@ -463,15 +276,4 @@ function timeRush(sec) {
     }
   }
   countDown();
-}
-
-function tileZero() {
-  game.addRandomTile = function () {
-    if (this.grid.cellsAvailable()) {
-      var value = Math.random() < 0.7 ? (Math.random() < 0.5 ? 1 : 2) : 0;
-      var tile = new Tile(this.grid.randomAvailableCell(), value);
-      this.grid.insertTile(tile);
-    }
-  };
-  game.restart();
 }
