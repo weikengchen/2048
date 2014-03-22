@@ -7,6 +7,15 @@ function getSize() {
   return 8; 
 }
 
+function getMode() { 
+  var reg = new RegExp("(^|&)mode=([^&]*)(&|$)", "i");
+  var r = location.search.substr(1).match(reg);
+  if (r != null) {
+    return unescape(decodeURI(r[2]));
+  }
+  return "normal"; 
+}
+
 var game;
 window.requestAnimationFrame(function () {
   var size = getSize();
@@ -21,7 +30,27 @@ window.requestAnimationFrame(function () {
   }
   container.innerHTML = html;
   game = new GameManager(size, KeyboardInputManager, HTMLActuator, LocalScoreManager);
-  normal();
+  var mode = getMode();
+  switch (mode) {
+  case "alwaysTwo":
+    alwaysTwo();
+    break;
+  case "fibonacci":
+    fibonacci();
+    break;
+  case "threes":
+    threes();
+    break;
+  case "mergeAny":
+    mergeAny();
+    break;
+  case "powerTwo":
+    powerTwo();
+    break;
+  case "tileZero":
+    tileZero();
+    break;
+  }
 });
 
 var last = '';
@@ -93,6 +122,14 @@ function swirl() {
 
 function random() {
   game.move(Math.floor(Math.random() * 4));
+}
+
+function changeSize(size) {
+  window.location.href = 'index.html?size=' + size + '&mode=' + getMode();
+}
+
+function changeMode(mode) {
+  window.location.href = 'index.html?size=' + getSize() + '&mode=' + mode;
 }
 
 function changeRule(add, merge, win) {
