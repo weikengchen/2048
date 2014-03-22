@@ -50,6 +50,9 @@ window.requestAnimationFrame(function () {
   case "tileZero":
     tileZero();
     break;
+  case "tileNegative":
+    tileNegative();
+    break;
   }
 });
 
@@ -281,6 +284,11 @@ function tileZero() {
   changeRule(function() {
     return Math.random() < 0.7 ? (Math.random() < 0.5 ? 1 : 2) : 0;
   }, normalMerge, normalWin);
+}
+
+function tileNegative() {
+  changeRule(function() { return Math.random() < 0.5 ? 1 : -1; }, 
+    function(a, b) { return a === b || a === -b; }, normalWin);
 }
 
 function timeRush(sec) {
