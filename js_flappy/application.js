@@ -36,8 +36,5 @@ window.requestAnimationFrame(function () {
       game.jump();
       cnt = 1;
     }
-    if (game.actuator.birdinn.textContent === '0') {
-      console.log(type1);
-    }
   }, 50);
 });
