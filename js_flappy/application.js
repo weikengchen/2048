@@ -15,12 +15,12 @@ window.requestAnimationFrame(function () {
     var blockALeft = parseFloat(game.actuator.blockobja.style.left);
     var type1 = blockATop < 180 ? (blockBTop < 180 ? 0 : 1) : 2;
     var type2 = blockCTop < 180 ? (blockDTop < 180 ? 0 : 1) : 2;
-    if (blockALeft < -80) {
+    if (blockALeft < -65) {
       type1 = type2;
     }
     var flag = false;
     if (type1 === 0) {
-      if (birdTop > 340) {
+      if (birdTop > 355) {
         flag = true;
       }
     } else if (type1 === 1) {
@@ -28,13 +28,16 @@ window.requestAnimationFrame(function () {
         flag = true;
       }
     } else {
-      if (birdTop > 120) {
+      if (birdTop > 100) {
         flag = true;
       }
     }
     if (flag) {
       game.jump();
       cnt = 1;
+    }
+    if (game.actuator.birdinn.textContent === '0') {
+      console.log(type1);
     }
   }, 50);
 });
