@@ -15,7 +15,7 @@ window.requestAnimationFrame(function () {
     var blockALeft = parseFloat(game.actuator.blockobja.style.left);
     var type1 = blockATop < 180 ? (blockBTop < 180 ? 0 : 1) : 2;
     var type2 = blockCTop < 180 ? (blockDTop < 180 ? 0 : 1) : 2;
-    if (blockALeft < -65) {
+    if (blockALeft < -72) {
       type1 = type2;
     }
     var flag = false;
