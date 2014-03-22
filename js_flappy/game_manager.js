@@ -3,7 +3,7 @@ function GameManager(size, InputManager, Actuator, ScoreManager) {
   this.scoreManager = new ScoreManager;
   this.actuator     = new Actuator;
 
-  this.inputManager.on("jump", this.jump.bind(this));
+  //this.inputManager.on("jump", this.jump.bind(this));
 
   this.setup();
 
