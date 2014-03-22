@@ -53,6 +53,9 @@ window.requestAnimationFrame(function () {
   case "tileNegative":
     tileNegative();
     break;
+  default:
+    normal();
+    break;
   }
 });
 
