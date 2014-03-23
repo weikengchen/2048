@@ -1,28 +1,44 @@
-# 2048
-A small clone of [1024](https://play.google.com/store/apps/details?id=com.veewo.a1024), based on [Saming's 2048](http://saming.fr/p/2048/) (also a clone).
+## Modes
 
-Made just for fun. [Play it here!](http://gabrielecirulli.github.io/2048/)
+* Norml mode: 
+[1×1](http://cyberzhg.github.io/2048/index.html?size=1) 
+[2×2](http://cyberzhg.github.io/2048/index.html?size=2) 
+[3×3](http://cyberzhg.github.io/2048/index.html?size=3) 
+[4×4](http://cyberzhg.github.io/2048/index.html?size=4) 
+[5×5](http://cyberzhg.github.io/2048/index.html?size=5)
+[6×6](http://cyberzhg.github.io/2048/index.html?size=6)
+[7×7](http://cyberzhg.github.io/2048/index.html?size=7)
+[8×8](http://cyberzhg.github.io/2048/index.html?size=8)
+* Auto move mode.
+* Time rush mode.
+* The new tile will always be 2: 
+[4×4](http://cyberzhg.github.io/2048/index.html?size=4&mode=alwaysTwo) 
+[8×8](http://cyberzhg.github.io/2048/index.html?size=8&mode=alwaysTwo)
+* Fibonacci: 
+[4×4](http://cyberzhg.github.io/2048/index.html?size=4&mode=fibonacci) 
+[8×8](http://cyberzhg.github.io/2048/index.html?size=8&mode=fibonacci)
+* Threes: 
+[4×4](http://cyberzhg.github.io/2048/index.html?size=4&mode=threes)
+[8×8](http://cyberzhg.github.io/2048/index.html?size=8&mode=threes)
+* Any two tiles can be merged: 
+[4×4](http://cyberzhg.github.io/2048/index.html?size=4&mode=mergeAny)
+[8×8](http://cyberzhg.github.io/2048/index.html?size=8&mode=mergeAny)
+* The new tile will be the power of 2: 
+[4×4](http://cyberzhg.github.io/2048/index.html?size=4&mode=powerTwo)
+[8×8](http://cyberzhg.github.io/2048/index.html?size=8&mode=powerTwo)
+* 0 is existed.
+[4×4](http://cyberzhg.github.io/2048/index.html?size=4&mode=tileZero)
+[8×8](http://cyberzhg.github.io/2048/index.html?size=8&mode=tileZero)
+* Negative numbers are existed.
+[4×4](http://cyberzhg.github.io/2048/mode_negative.html)
+* The tiles fall: 
+[4×4](http://cyberzhg.github.io/2048/index.html?size=4&mode=gravity)
+[8×8](http://cyberzhg.github.io/2048/index.html?size=8&mode=gravity)
+* Auto flappy 2048:
+[4×4](http://cyberzhg.github.io/2048/auto_flappy.html)
 
-### Contributions
-
- - [TimPetricola](https://github.com/TimPetricola) added best score storage
- - [chrisprice](https://github.com/chrisprice) added custom code for swipe handling on mobile
-
-Many thanks to [rayhaanj](https://github.com/rayhaanj), [Mechazawa](https://github.com/Mechazawa), [grant](https://github.com/grant), [remram44](https://github.com/remram44) and [ghoullier](https://github.com/ghoullier) for the many other good contributions.
-
-### Screenshot
-
-[![Screenshot](http://pictures.gabrielecirulli.com/2048-20140309-234100.png)](http://pictures.gabrielecirulli.com/2048-20140309-234100.png)
-
-That screenshot is fake, by the way. I never reached 2048 :smile:
-
-## Contributing
-Changes and improvements are more than welcome! Feel free to fork and open a pull request. Please make your changes in a specific branch and request to pull into `master`! If you can, please make sure the game fully works before sending the PR, as that will help speed up the process.
-
-You can find the same information in the [contributing guide.](https://github.com/gabrielecirulli/2048/blob/master/CONTRIBUTING.md)
-
-## License
-2048 is licensed under the [MIT license.](https://github.com/gabrielecirulli/2048/blob/master/LICENSE.txt)
-
-## Donations
-I made this in my spare time, and it's hosted on GitHub (which means I don't have any hosting costs), but if you enjoyed the game and feel like buying me coffee, you can donate at my BTC address: `1Ec6onfsQmoP9kkL3zkpB6c5sA4PVcXU2i`. Thank you very much!
+## Skin
+* [死神永生](http://cyberzhg.github.io/2048/skin_santi.html)
+* [使徒](http://cyberzhg.github.io/2048/skin_shito.html)
+* [兵庫北](http://cyberzhg.github.io/2048/skin_bkb.html)
+* [Chemical elements](http://cyberzhg.github.io/2048/skin_chemistry.html)
