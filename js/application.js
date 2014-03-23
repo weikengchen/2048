@@ -53,6 +53,9 @@ window.requestAnimationFrame(function () {
   case "tileNegative":
     tileNegative();
     break;
+  case "gravity":
+    gravity();
+    break;
   default:
     normal();
     break;
@@ -292,6 +295,20 @@ function tileZero() {
 function tileNegative() {
   changeRule(function() { return Math.random() < 0.5 ? 1 : -1; }, 
     function(a, b) { return a === b || a === -b; }, normalWin);
+}
+
+function gravity() {
+  changeRule(normalAdd, 
+    function(a, b) { return a === b; }, 
+    function(merged) { return merged === 2147483648; });
+  game.gravity = game.move;
+  game.move = function(dir) {
+    game.gravity(dir);
+    game.gravity(2);
+  };
+  game.inputManager.events["move"] = [];
+  game.inputManager.on("move", game.move.bind(game));
+  game.restart();
 }
 
 function timeRush(sec) {
