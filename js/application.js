@@ -36,7 +36,7 @@ window.requestAnimationFrame(function () {
     alwaysTwo();
     break;
   case "fibonacci":
-    fibonacci();m
+    fibonacci();
     break;
   case "threes":
     threes();
