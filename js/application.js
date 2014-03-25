@@ -36,7 +36,7 @@ window.requestAnimationFrame(function () {
     alwaysTwo();
     break;
   case "fibonacci":
-    fibonacci();
+    fibonacci();m
     break;
   case "threes":
     threes();
@@ -190,7 +190,7 @@ function changeRule(add, merge, win) {
             self.grid.removeTile(tile);
             tile.updatePosition(positions.next);
             self.score += merged.value;
-            if (win(merge.value)) self.won = true;
+            if (win(merged.value)) self.won = true;
           } else {
             self.moveTile(tile, positions.farthest);
           }
