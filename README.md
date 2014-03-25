@@ -1,6 +1,6 @@
-## Modes
+## Mode
 
-* Norml mode: 
+* Normal mode: 
 [1×1](http://cyberzhg.github.io/2048/index.html?size=1) 
 [2×2](http://cyberzhg.github.io/2048/index.html?size=2) 
 [3×3](http://cyberzhg.github.io/2048/index.html?size=3) 
