@@ -342,3 +342,34 @@ function timeRush(sec) {
   }
   countDown();
 }
+
+function saveBoard() {
+  tiles = []
+  for (var i = 0; i < game.grid.cells.length; ++i) {
+    for (var j = 0; j < game.grid.cells[i].length; ++j) {
+      if (game.grid.cells[i][j]) {
+        tiles.push(game.grid.cells[i][j]);
+      }
+    }
+  }
+  window.localStorage.setItem('tiles', JSON.stringify(tiles));
+}
+
+function loadBoard() {
+  var tiles = window.localStorage.getItem('tiles');
+  if (tiles) {
+    tiles = JSON.parse(tiles);
+    for (var i = 0; i < game.grid.cells.length; ++i) {
+      for (var j = 0; j < game.grid.cells[i].length; ++j) {
+        if (game.grid.cells[i][j]) {
+          game.grid.removeTile(game.grid.cells[i][j]);
+        }
+      }
+    }
+    for (var i = 0; i < tiles.length; ++i) {
+      var tile = new Tile({x: tiles[i].x, y: tiles[i].y}, tiles[i].value);
+      game.grid.insertTile(tile);
+    }
+    game.actuate();
+  }
+}
