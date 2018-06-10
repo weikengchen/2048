@@ -40,6 +40,23 @@ HTMLActuator.prototype.clearContainer = function (container) {
 };
 
 HTMLActuator.prototype.addTile = function (tile) {
+  var text = new Array();
+  text[1] = "红专并进"
+  text[2] = "理实交融"
+  text[3] = "永恒东风"
+  text[4] = "红过九重"
+  text[5] = "科学高峰"
+  text[6] = "高到无穷"
+  text[7] = "某坑势力"
+  text[8] = "信息安全"
+  text[9] = "炸毁一教"
+  text[10] = "火山喷发"  
+  text[11] = "也西东流"  
+  text[12] = "废理兴工"
+  text[13] = "太空校区"
+  text[14] = "大成功"
+  var text2 = function (n) { var r = 0; while (n > 1) r++, n >>= 1; return r; }
+
   var self = this;
 
   var wrapper   = document.createElement("div");
@@ -52,7 +69,7 @@ HTMLActuator.prototype.addTile = function (tile) {
   this.applyClasses(wrapper, classes);
 
   inner.classList.add("tile-inner");
-  inner.textContent = tile.value;
+  inner.textContent = text[text2(tile.value)];
 
   if (tile.previousPosition) {
     // Make sure that the tile gets rendered in the previous position first
