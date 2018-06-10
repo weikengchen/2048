@@ -557,21 +557,21 @@ hr {
   .tile.tile-128 .tile-inner, .tile.tile-34 .tile-inner, .tile.tile-96 .tile-inner  {
     color: #f9f6f2;
     background: #edcf72;
-    font-size: 24px; }
+    font-size: 13px; }
     @media screen and (max-width: 480px) {
       .tile.tile-128 .tile-inner, .tile.tile-34 .tile-inner, .tile.tile-96 .tile-inner  {
         font-size: 15px; } }
   .tile.tile-256 .tile-inner, .tile.tile-55 .tile-inner, .tile.tile-192 .tile-inner  {
     color: #f9f6f2;
     background: #edcc61;
-    font-size: 24px; }
+    font-size: 13px; }
     @media screen and (max-width: 480px) {
       .tile.tile-256 .tile-inner, .tile.tile-55 .tile-inner, .tile.tile-192 .tile-inner  {
         font-size: 15px; } }
   .tile.tile-512 .tile-inner, .tile.tile-89 .tile-inner, .tile.tile-384 .tile-inner  {
     color: #f9f6f2;
     background: #edc850;
-    font-size: 24px; }
+    font-size: 13px; }
     @media screen and (max-width: 480px) {
       .tile.tile-512 .tile-inner, .tile.tile-89 .tile-inner, .tile.tile-384 .tile-inner  {
         font-size: 15px; } }
